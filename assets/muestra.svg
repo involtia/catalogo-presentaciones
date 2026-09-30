@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <!-- imagen de muestra: placa con pistas, para las fichas de fotos -->
+  <defs>
+    <pattern id="g" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#ffffff" stroke-opacity=".05"/>
+    </pattern>
+    <radialGradient id="h" cx="50%" cy="45%" r="60%">
+      <stop offset="0" stop-color="#a8d400" stop-opacity=".18"/>
+      <stop offset="1" stop-color="#a8d400" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="600" fill="#0b0f13"/>
+  <rect width="800" height="600" fill="url(#g)"/>
+  <rect width="800" height="600" fill="url(#h)"/>
+  <rect x="170" y="110" width="460" height="340" rx="14" fill="#0f2a1c" stroke="#a8d400" stroke-opacity=".55" stroke-width="3"/>
+  <g fill="none" stroke="#a8d400" stroke-opacity=".75" stroke-width="4" stroke-linecap="round">
+    <path d="M170 180H260L300 220H350"/>
+    <path d="M170 260H240L270 290H350"/>
+    <path d="M450 220H520L560 180H630"/>
+    <path d="M450 300H540L580 340H630"/>
+    <path d="M400 350V410L430 440"/>
+  </g>
+  <rect x="350" y="200" width="100" height="150" rx="6" fill="#141a20" stroke="#b9c2ca" stroke-opacity=".6" stroke-width="2"/>
+  <g fill="#b9c2ca" fill-opacity=".7">
+    <rect x="338" y="215" width="12" height="6"/><rect x="338" y="240" width="12" height="6"/><rect x="338" y="265" width="12" height="6"/><rect x="338" y="290" width="12" height="6"/><rect x="338" y="315" width="12" height="6"/>
+    <rect x="450" y="215" width="12" height="6"/><rect x="450" y="240" width="12" height="6"/><rect x="450" y="265" width="12" height="6"/><rect x="450" y="290" width="12" height="6"/><rect x="450" y="315" width="12" height="6"/>
+  </g>
+  <g fill="#05070a" stroke="#a8d400" stroke-width="3">
+    <circle cx="170" cy="180" r="8"/><circle cx="170" cy="260" r="8"/><circle cx="630" cy="180" r="8"/><circle cx="630" cy="340" r="8"/><circle cx="430" cy="440" r="8"/>
+  </g>
+  <rect x="520" y="370" width="70" height="44" rx="4" fill="#141a20" stroke="#ffc000" stroke-opacity=".7" stroke-width="2"/>
+  <text x="400" y="530" text-anchor="middle" font-family="JetBrains Mono, Consolas, monospace" font-size="22" letter-spacing="6" fill="#8b959e">IMAGEN DE MUESTRA</text>
+</svg>

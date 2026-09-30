@@ -1,0 +1,732 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Catálogo de piezas · Inmaker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/theme.css">
+  <style>
+    /* estilos propios del catálogo (no afectan a la presentación) */
+    body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--f-body); }
+    body::before {
+      content: ''; position: fixed; inset: 0; pointer-events: none;
+      background-image: linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+    .wrap { position: relative; max-width: 1400px; margin: 0 auto; padding: 48px 32px 120px; }
+    .top h1 { font-family: var(--f-head); font-size: 44px; margin: 10px 0 12px; text-transform: uppercase; }
+    .top p { color: #c7cdd2; font-size: 17px; line-height: 1.55; max-width: 900px; margin: 0 0 10px; }
+    .top code, .how code { font-family: var(--f-mono); font-size: 14px; color: var(--lime); }
+    .how { margin: 22px 0 8px; padding: 18px 22px; border: 1px solid var(--edge); background: rgba(255,255,255,.02); max-width: 900px; }
+    .how div { font-size: 16px; color: #c7cdd2; margin: 6px 0; }
+    .how b { color: var(--ink); font-weight: 600; }
+
+    nav { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 0; margin: 26px 0 10px;
+          background: linear-gradient(var(--bg) 80%, transparent); }
+    nav a { font-family: var(--f-mono); font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink);
+            text-decoration: none; padding: 8px 12px; border: 1px solid var(--edge); }
+    nav a:hover { border-color: var(--lime); color: var(--lime); }
+    nav a b { color: var(--lime); margin-right: 6px; }
+
+    .sec { margin-top: 46px; scroll-margin-top: 70px; }
+    .sec-h { display: flex; align-items: baseline; gap: 16px; margin-bottom: 6px; }
+    .sec-h .code { font-family: var(--f-head); font-weight: 700; font-size: 30px; color: var(--lime); }
+    .sec-h .t { font-family: var(--f-head); font-weight: 700; font-size: 30px; text-transform: uppercase; }
+    .sec > p { color: var(--muted); font-size: 16px; margin: 0 0 18px; max-width: 900px; line-height: 1.5; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 18px; }
+    .grid.small { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+    .it { border: 1px solid var(--edge); background: rgba(12,16,20,.85); display: flex; flex-direction: column; }
+    .it-h { display: flex; align-items: center; gap: 12px; padding: 14px 16px 0; }
+    .it-h .code { font-family: var(--f-mono); font-size: 14px; color: var(--bg); background: var(--lime); padding: 3px 8px; font-weight: 500; }
+    .it-h .name { font-family: var(--f-head); font-weight: 700; font-size: 21px; text-transform: uppercase; flex: 1; }
+    .it-h button { font-family: var(--f-mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; cursor: pointer;
+                   color: var(--lime); background: transparent; border: 1px solid rgba(168,212,0,.45); padding: 6px 10px; }
+    .it-h button:hover { background: rgba(168,212,0,.12); }
+    .alias { padding: 4px 16px 0; font-family: var(--f-mono); font-size: 12.5px; color: var(--muted); }
+    .stage { margin: 12px 16px 0; min-height: 200px; display: grid; place-items: center; overflow: hidden; padding: 16px;
+             background: #080b0e; border: 1px solid rgba(255,255,255,.05); }
+    .stage.short { min-height: 120px; }
+    .demo { zoom: .5; }
+    .demo .item { width: 680px; }
+    .demo .row { width: 880px; }
+    .demo .tech { width: 680px; }
+    .demo.z6 { zoom: .6; } .demo.z4 { zoom: .4; } .demo.z1 { zoom: 1; }
+    .desc { padding: 12px 16px 0; font-size: 15px; line-height: 1.5; color: #c7cdd2; }
+    .use { padding: 8px 16px 16px; font-family: var(--f-mono); font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+    .use b { color: var(--silver); font-weight: 500; }
+
+    .sw { height: 90px; }
+    .typo { font-size: 40px; line-height: 1.1; }
+
+    .ease-row { display: flex; flex-direction: column; gap: 14px; width: 100%; }
+    .ease-row div { display: flex; align-items: center; gap: 12px; font-family: var(--f-mono); font-size: 13px; color: var(--muted); }
+    .ease-row span.lane { flex: 1; height: 2px; background: rgba(255,255,255,.08); position: relative; }
+    .ease-row i { position: absolute; top: -9px; left: 0; width: 20px; height: 20px; background: var(--lime); box-shadow: 0 0 12px var(--lime); }
+
+    /* demos X */
+    .fx-glitch, .fx-type, .fx-scramble, .fx-odo { font-family: var(--f-head); font-weight: 700; text-transform: uppercase; color: var(--ink); text-align: center; }
+    .fx-glitch { position: relative; font-size: 64px; color: var(--lime); }
+    .fx-glitch .gl { display: inline-block; }
+    .fx-glitch .g1, .fx-glitch .g2 { position: absolute; left: 0; top: 0; visibility: hidden; }
+    .fx-glitch .g1 { color: var(--amber); } .fx-glitch .g2 { color: #45e0ff; mix-blend-mode: screen; }
+    .fx-type { font-size: 30px; line-height: 1.2; min-height: 2.4em; }
+    .fx-type .caret { display: inline-block; width: .5em; height: 1em; margin-left: 4px; vertical-align: -.12em; background: var(--lime); animation: blink 1s steps(1) infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+    .fx-scramble { font-size: 34px; color: var(--lime); font-family: var(--f-mono); letter-spacing: .04em; }
+    .fx-par { position: relative; width: 100%; height: 190px; overflow: hidden; }
+    .fx-par .lay { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .grid-lay { background-image: linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px); background-size: 28px 28px; }
+    .fx-cv { width: 100%; max-width: 400px; height: 180px; }
+    .fx-box { position: relative; width: 100%; height: 180px; display: grid; place-items: center; overflow: hidden; background: #0b0f13; }
+    .fx-grain { position: absolute; inset: 0; pointer-events: none; animation: grain .5s steps(4) infinite; }
+    @keyframes grain { 0% { background-position: 0 0; } 25% { background-position: -40px 30px; } 50% { background-position: 50px -20px; } 75% { background-position: -30px -50px; } }
+    .fx-crt { position: absolute; inset: 0; pointer-events: none;
+      background: repeating-linear-gradient(0deg, rgba(0,0,0,.45) 0 2px, transparent 2px 4px);
+      animation: flick 3s infinite; }
+    @keyframes flick { 0%, 100% { opacity: 1; } 47% { opacity: .85; } 50% { opacity: 1; } 52% { opacity: .75; } }
+    .fx-odo { font-size: 90px; color: var(--amber); display: flex; line-height: 1; text-shadow: 0 0 22px rgba(255,192,0,.35); }
+    .fx-odo .win { display: inline-block; height: 1em; overflow: hidden; }
+    .fx-odo .reel { display: flex; flex-direction: column; }
+    .fx-odo .reel span { height: 1em; }
+    .fx-shine-box { position: relative; overflow: hidden; }
+    .fx-shine { position: absolute; top: -20%; bottom: -20%; left: 0; width: 45%; transform: skewX(-20deg);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.45), transparent); mix-blend-mode: overlay; }
+    .fx-bwrap { position: relative; width: 340px; height: 120px; }
+    .fx-border { position: absolute; inset: 0; }
+    .fx-border path { fill: none; stroke: var(--amber); stroke-width: 2; filter: drop-shadow(0 0 6px rgba(255,192,0,.6)); }
+    .fx-border-in { position: absolute; inset: 0; display: flex; align-items: center; gap: 18px; padding: 0 28px;
+      font-family: var(--f-head); font-weight: 700; font-size: 30px; text-transform: uppercase; }
+    .fx-border-in span { color: var(--amber); font-size: 40px; }
+    .fx-card { position: relative; transform-style: preserve-3d; }
+    .fx-card .face { backface-visibility: hidden; }
+    .fx-card .back { position: absolute; inset: 0; transform: rotateY(180deg);
+      background: repeating-linear-gradient(45deg, #11161b 0 14px, #0b0f13 14px 28px); border: 2px solid rgba(168,212,0,.5); }
+    .fx-zoom { position: relative; width: 340px; height: 255px; overflow: hidden; border: 1px solid var(--edge); }
+    .fx-zoom img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .fx-ring { position: absolute; left: 60%; top: 14%; width: 90px; height: 90px; border: 3px solid var(--lime); border-radius: 50%;
+      box-shadow: 0 0 18px var(--lime); visibility: hidden; }
+
+    .idea { border: 1px dashed var(--edge); padding: 14px 16px; }
+    .idea .code { font-family: var(--f-mono); font-size: 13px; color: var(--amber); }
+    .idea .name { font-family: var(--f-head); font-weight: 700; font-size: 19px; text-transform: uppercase; margin: 4px 0 6px; }
+    .idea p { margin: 0; font-size: 14.5px; color: #c7cdd2; line-height: 1.45; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="kicker">Presentaciones Inmaker</div>
+    <h1>Catálogo de piezas</h1>
+    <p>Todo lo que puede aparecer en una diapositiva, con un <b>código corto</b> para nombrarlo en el chat. Cada ficha es la pieza real, no una imagen: pulsa <b>Repetir</b> para volver a ver su animación.</p>
+    <div class="how">
+      <div><b>Cómo pedirlo:</b> diapositiva + pieza + cambio.</div>
+      <div>«En la <code>3</code>, la tarjeta de la derecha que entre con <code>A5</code> en vez de <code>A8</code>.»</div>
+      <div>«En la <code>5</code>, que las cuatro celdas <code>C5</code> salgan <code>M3</code> (a la vez) y más lentas.»</div>
+      <div>«Quita <code>D2</code> de la portada.» · «Prueba <code>X3</code> en el título de la <code>1</code>.»</div>
+    </div>
+  </header>
+
+  <nav>
+    <a href="#A"><b>A</b>Animaciones</a><a href="#M"><b>M</b>Modificadores</a><a href="#C"><b>C</b>Componentes</a>
+    <a href="#D"><b>D</b>Adornos</a><a href="#K"><b>K</b>Colores</a><a href="#F"><b>F</b>Tipografía</a>
+    <a href="#T"><b>T</b>Transiciones</a><a href="#X"><b>X</b>Sin usar todavía</a>
+  </nav>
+
+  <!-- ================= A · ANIMACIONES ================= -->
+  <section class="sec" id="A">
+    <div class="sec-h"><span class="code">A</span><span class="t">Animaciones de entrada</span></div>
+    <p>Cómo aparece una pieza. Cualquier componente puede entrar con cualquiera de estas.</p>
+    <div class="grid">
+
+      <article class="it">
+        <div class="it-h"><span class="code">A1</span><span class="name">Subir</span><button>Repetir</button></div>
+        <div class="alias">fade up · up</div>
+        <div class="stage"><div class="demo reveal"><div class="item panel t" data-a="up" style="--c:var(--lime)"><span class="num">01</span><h3>Aparece subiendo</h3></div></div></div>
+        <div class="desc">Sube unos centímetros mientras se enfoca y aparece.</div>
+        <div class="use">Bueno para: subtítulos, llamadas</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">A2</span><span class="name">Bajar</span><button>Repetir</button></div>
+        <div class="alias">fade down · down</div>
+        <div class="stage"><div class="demo reveal"><div class="item panel t" data-a="down" style="--c:var(--lime)"><span class="num">01</span><h3>Aparece bajando</h3></div></div></div>
+        <div class="desc">Como A1, pero cae desde arriba.</div>
+        <div class="use">Sin usar todavía</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">A3</span><span class="name">Desde la izquierda</span><button>Repetir</button></div>
+        <div class="alias">slide in left · left</div>
+        <div class="stage"><div class="demo reveal"><div class="item panel t" data-a="left" style="--c:var(--amber)"><span class="num">02</span><h3>Entra por la izquierda</h3></div></div></div>
+        <div class="desc">Se desliza desde la izquierda mientras se enfoca.</div>
+        <div class="use">Bueno para: cabeceras, listas</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">A4</span><span class="name">Desde la derecha</span><button>Repetir</button></div>
+        <div class="alias">slide in right · right</div>
+        <div class="stage"><div class="demo reveal"><div class="item panel t" data-a="right" style="--c:var(--amber)"><span class="num">02</span><h3>Entra por la derecha</h3></div></div></div>
+        <div class="desc">Espejo de A3.</div>
+        <div class="use">Bueno para: listas que entran por el otro lado</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">A5</span><span class="name">Crecer</span><button>Repetir</button></div>
+        <div class="alias">zoom in · scale</div>
+        <div class="stage"><div class="demo reveal"><img class="t" data-a="scale" src="assets/logo-inmaker.png" alt="" style="width:300px; display:block"></div></div>
+        <div class="desc">Crece desde un poco más pequeño y se enfoca. Da sensación de «encenderse».</div>
+        <div class="use">Bueno para: logos, núcleos, puntos destacados</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">A6</span><span class="name">Fundido</span><button>Repetir</button></div>
+        <div class="alias">fade · fade in</div>
+        <div class="stage"><div class="demo reveal"><div class="item panel t" data-a="fade" style="--c:var(--silver)"><span class="num">03</span><h3>Solo aparece</h3></div></div></div>
+        <div class="desc">Aparece sin moverse. La más discreta.</div>
+        <div class="use">Bueno para: lemas, logo de esquina, rejillas de gráficas</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">A7</span><span class="name">Letra a letra</span><button>Repetir</button></div>
+        <div class="alias">split text · char stagger · chars</div>
+        <div class="stage"><div class="demo reveal"><h1 class="t" data-a="chars" style="font-size:80px; perspective:900px; text-align:center">Tu gran <span style="color:var(--lime)">titular</span></h1></div></div>
+        <div class="desc">Cada letra gira desde abajo, una tras otra. Solo para titulares.</div>
+        <div class="use">Bueno para: el título de portada</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">A8</span><span class="name">Barrido</span><button>Repetir</button></div>
+        <div class="alias">scan reveal · wipe · scan</div>
+        <div class="stage"><div class="demo reveal"><div class="node panel t" data-a="scan" style="--c:var(--lime); position:relative"><span class="num">01</span><div><h3>Pieza con<br>barrido</h3><p>Una línea de apoyo</p></div></div></div></div>
+        <div class="desc">Una línea de luz recorre la pieza de izquierda a derecha y la va descubriendo.</div>
+        <div class="use">Bueno para: tarjetas, celdas, fotos, frases</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">A9</span><span class="name">Trazado</span><button>Repetir</button></div>
+        <div class="alias">line draw · stroke draw · draw</div>
+        <div class="stage"><div class="demo z1"><svg class="t" data-a="draw" viewBox="0 0 420 160" width="420" height="160">
+          <path class="trace" d="M0 40 H140 L200 100 H360"/><path class="trace" d="M0 130 H90 L130 90 H260"/>
+          <circle class="pad" cx="360" cy="100" r="6"/><circle class="pad" cx="260" cy="90" r="6"/>
+        </svg></div></div>
+        <div class="desc">La línea se dibuja sola de principio a fin y al final se encienden los terminales.</div>
+        <div class="use">Bueno para: pistas, conexiones, líneas de gráfica</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">A10</span><span class="name">Contador</span><button>Repetir</button></div>
+        <div class="alias">count up · number ticker · data-count</div>
+        <div class="stage"><div class="demo reveal"><div class="row panel t" data-a="fade" style="--c:var(--lime); width:760px"><h3>Asistentes</h3><p class="val"><b data-count="1200">1.200</b></p></div></div></div>
+        <div class="desc">La cifra sube desde cero hasta su valor. Se combina con cualquier animación de la A.</div>
+        <div class="use">Bueno para: porcentajes, precios, cifras</div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ================= M · MODIFICADORES ================= -->
+  <section class="sec" id="M">
+    <div class="sec-h"><span class="code">M</span><span class="t">Modificadores</span></div>
+    <p>No son piezas: cambian <b>cuándo</b> y <b>cómo</b> ocurre una animación.</p>
+    <div class="grid">
+
+      <article class="it">
+        <div class="it-h"><span class="code">M1</span><span class="name">Al llegar</span></div>
+        <div class="alias">on enter · data-in</div>
+        <div class="desc">La pieza entra sola al cambiar de diapositiva, sin pulsar. Así entran los títulos, los logos y las fotos.</div>
+        <div class="use">Lo contrario de M2</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">M2</span><span class="name">Con pulsación</span></div>
+        <div class="alias">fragment · step · build</div>
+        <div class="desc">La pieza espera a que pulses. Cada pulsación revela el siguiente grupo. Hacia atrás se oculta.</div>
+        <div class="use">Lo normal para el contenido que vas explicando</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">M3</span><span class="name">A la vez</span><button>Repetir</button></div>
+        <div class="alias">same step · together · data-fragment-index</div>
+        <div class="stage"><div class="demo z4 reveal" style="display:grid; gap:20px">
+          <div class="item panel t" data-a="left" style="--c:var(--lime)"><span class="num">01</span><h3>Uno</h3></div>
+          <div class="item panel t" data-a="left" style="--c:var(--amber)"><span class="num">02</span><h3>Dos</h3></div>
+          <div class="item panel t" data-a="left" style="--c:var(--silver)"><span class="num">03</span><h3>Tres</h3></div>
+        </div></div>
+        <div class="desc">Varias piezas salen con la misma pulsación y en el mismo instante.</div>
+        <div class="use">Bueno para: columnas que se comparan</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">M4</span><span class="name">En cascada</span><button>Repetir</button></div>
+        <div class="alias">stagger</div>
+        <div class="stage"><div class="demo z4 reveal" style="display:grid; gap:20px" data-stagger=".18">
+          <div class="item panel t" data-a="left" style="--c:var(--lime)"><span class="num">01</span><h3>Uno</h3></div>
+          <div class="item panel t" data-a="left" style="--c:var(--amber)"><span class="num">02</span><h3>Dos</h3></div>
+          <div class="item panel t" data-a="left" style="--c:var(--silver)"><span class="num">03</span><h3>Tres</h3></div>
+        </div></div>
+        <div class="desc">Misma pulsación, pero una detrás de otra con un pequeño retraso. Se puede pedir más o menos separación.</div>
+        <div class="use">Bueno para: las filas de una misma columna</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">M5</span><span class="name">Velocidad</span></div>
+        <div class="alias">duration · delay</div>
+        <div class="desc">«Más rápida», «más lenta», «que espere medio segundo». Por defecto, las entradas duran cerca de 0,8 s y los trazados 1,1 s.</div>
+        <div class="use">Se puede pedir por pieza o para toda la presentación</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">M6</span><span class="name">Curva de movimiento</span><button>Repetir</button></div>
+        <div class="alias">easing</div>
+        <div class="stage short"><div class="ease-row" data-ease>
+          <div>M6a suave<span class="lane"><i data-e="power3.out"></i></span></div>
+          <div>M6b rebote<span class="lane"><i data-e="back.out(2)"></i></span></div>
+          <div>M6c elástica<span class="lane"><i data-e="elastic.out(1,.45)"></i></span></div>
+          <div>M6d lineal<span class="lane"><i data-e="none"></i></span></div>
+        </div></div>
+        <div class="desc">Cómo arranca y frena el movimiento. La curva por defecto es M6a.</div>
+        <div class="use">M6b y M6c dan un aire más juguetón</div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ================= C · COMPONENTES ================= -->
+  <section class="sec" id="C">
+    <div class="sec-h"><span class="code">C</span><span class="t">Componentes</span></div>
+    <p>Las piezas con las que se construye cada diapositiva. Casi todas usan el panel C1 como base.</p>
+    <div class="grid">
+
+      <article class="it">
+        <div class="it-h"><span class="code">C1</span><span class="name">Panel achaflanado</span></div>
+        <div class="alias">panel · HUD card · chamfered card</div>
+        <div class="stage"><div class="demo reveal"><div class="panel" style="--c:var(--lime); width:620px; height:220px"></div></div></div>
+        <div class="desc">Fondo oscuro con dos esquinas cortadas en diagonal y un borde que brilla en el color de la pieza.</div>
+        <div class="use">Base de casi todo</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">C2</span><span class="name">Panel teñido</span></div>
+        <div class="alias">tinted panel · panel tint</div>
+        <div class="stage"><div class="demo reveal"><div class="vnode panel tint" style="--c:var(--amber); position:relative"><h3>Bloque destacado</h3></div></div></div>
+        <div class="desc">Como C1, pero con un ligero tinte de su color desde la esquina superior izquierda.</div>
+        <div class="use">Bueno para: cabeceras, frases, pasos de un ciclo</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">C3</span><span class="name">Nodo numerado</span></div>
+        <div class="alias">feature card · numbered node</div>
+        <div class="stage"><div class="demo reveal"><div class="node panel" style="--c:var(--amber); position:relative"><span class="num">02</span><div><h3>Título del nodo</h3><p>Una línea de apoyo breve</p></div></div></div></div>
+        <div class="desc">Número grande brillante, título y una línea de apoyo.</div>
+        <div class="use">Bueno para: ecosistemas, listas de servicios</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">C4</span><span class="name">Fila de lista</span></div>
+        <div class="alias">list item · list row</div>
+        <div class="stage"><div class="demo reveal"><div class="item panel" style="--c:var(--lime)"><span class="num">01</span><h3>Primer punto de la lista</h3></div></div></div>
+        <div class="desc">Fila baja con número de color y texto. Se apilan formando una lista.</div>
+        <div class="use">Bueno para: listas (versión grande, <b>C4g</b>)</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">C5</span><span class="name">Celda de dato</span></div>
+        <div class="alias">stat cell · KPI tile</div>
+        <div class="stage"><div class="demo reveal"><div class="cell panel" style="--c:var(--amber); width:320px; height:180px"><p class="big">85 %</p><p class="small">explicación corta</p></div></div></div>
+        <div class="desc">Cifra grande en color y una explicación corta debajo.</div>
+        <div class="use">Bueno para: tablas de cifras</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">C6</span><span class="name">Fila de cifra</span></div>
+        <div class="alias">stat row · ledger row</div>
+        <div class="stage"><div class="demo z4 reveal"><div class="row panel" style="--c:var(--amber)"><h3>Concepto</h3><p class="val">1.500 €</p></div></div></div>
+        <div class="desc">Concepto a la izquierda y cifra grande a la derecha, como en un libro de cuentas.</div>
+        <div class="use">Bueno para: resúmenes de cifras (versión ancha con número, <b>C6a</b>)</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">C7</span><span class="name">Tarjeta</span></div>
+        <div class="alias">card</div>
+        <div class="stage"><div class="demo z4 reveal"><div class="card panel" style="--c:var(--lime); width:800px; height:250px"><div class="label">Etiqueta</div><h3 class="card-t">Título</h3><p class="card-p">Un párrafo corto que explica la tarjeta</p></div></div></div>
+        <div class="desc">Etiqueta, título grande en color y un párrafo.</div>
+        <div class="use">Bueno para: casos de referencia</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">C8</span><span class="name">Ficha técnica</span></div>
+        <div class="alias">spec tile · tech tile</div>
+        <div class="stage"><div class="demo reveal"><div class="tech panel" style="--c:var(--amber)"><div class="label">Herramienta</div><h3>Reveal.js</h3></div></div></div>
+        <div class="desc">Etiqueta pequeña y nombre grande en color. Para herramientas, proveedores y tecnologías.</div>
+        <div class="use">Bueno para: infraestructura, herramientas</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">C9</span><span class="name">Frase destacada</span></div>
+        <div class="alias">statement · callout block</div>
+        <div class="stage"><div class="demo z4 reveal"><div class="statement panel tint" style="--c:var(--amber)"><span class="num">01</span><h3>Una afirmación fuerte en una sola línea</h3></div></div></div>
+        <div class="desc">Bloque grande para una afirmación fuerte, con número.</div>
+        <div class="use">Bueno para: conclusiones</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">C10</span><span class="name">Marco de imagen</span></div>
+        <div class="alias">image frame · media frame</div>
+        <div class="stage"><div class="demo reveal"><div class="frame panel" style="--c:var(--lime); width:440px; height:330px"><img src="assets/muestra.svg" alt=""></div></div></div>
+        <div class="desc">Foto dentro de un panel achaflanado con su borde de color.</div>
+        <div class="use">Bueno para: fotos de producto, capturas</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">C11</span><span class="name">Cabecera de bloque</span></div>
+        <div class="alias">section header chip</div>
+        <div class="stage"><div class="demo reveal"><div class="headchip panel tint" style="--c:var(--lime)">Cabecera de columna</div></div></div>
+        <div class="desc">Barra teñida que titula una columna de la diapositiva.</div>
+        <div class="use">Bueno para: columnas de una comparación</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">C12</span><span class="name">Núcleo con órbita</span></div>
+        <div class="alias">hub · orbit</div>
+        <div class="stage"><div class="demo reveal"><div class="hub" style="position:relative; left:0; top:0"><svg class="orbit" viewBox="0 0 320 320"><circle cx="160" cy="160" r="150"/></svg><div class="hub-core"><img src="assets/logo-inmaker.png" alt=""></div></div></div></div>
+        <div class="desc">Círculo central con el logo y un anillo punteado que gira. Las conexiones salen de él.</div>
+        <div class="use">Bueno para: ecosistemas, propuestas de valor</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">C13</span><span class="name">Antetítulo y título</span></div>
+        <div class="alias">eyebrow · kicker + heading</div>
+        <div class="stage"><div class="demo reveal"><div class="kicker" style="margin-bottom:18px">Antetítulo</div><h2 style="font-size:76px">Título de la diapositiva</h2></div></div>
+        <div class="desc">Palabra pequeña espaciada en lima sobre el título grande. Cabecera de cada diapositiva.</div>
+        <div class="use">Bueno para: todas las diapositivas, con logo de esquina y pie «Inmaker · nº»</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">C14</span><span class="name">Etiqueta y chip</span></div>
+        <div class="alias">label · chip · tag</div>
+        <div class="stage"><div class="demo z6 reveal" style="display:grid; gap:24px; justify-items:start">
+          <div class="label">C14a · Etiqueta</div>
+          <div class="chips"><span class="chip" style="--c:var(--lime)"><b>01</b> C14b · Chip</span><span class="chip" style="--c:var(--amber)">Dato suelto</span></div>
+        </div></div>
+        <div class="desc">C14a: texto técnico pequeño con flecha, para rotular. C14b: dato suelto en una caja fina.</div>
+        <div class="use">C14a para rotular columnas y pies de foto · C14b para datos sueltos</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">C15</span><span class="name">Gráfica de línea</span></div>
+        <div class="alias">line chart</div>
+        <div class="stage"><div class="demo z6"><svg class="chart t" data-a="draw" viewBox="0 0 560 300" width="560" height="300">
+          <g class="grid"><path d="M40 20 H540 M40 100 H540 M40 180 H540"/><path class="axis" d="M40 20 V260 H540"/></g>
+          <path class="trace rev" d="M40 250 L400 110"/><path class="trace proj" d="M400 110 L540 50"/>
+          <circle class="pad lime-fill" cx="40" cy="250" r="8"/><circle class="pad" cx="400" cy="110" r="8"/><circle class="pad amber-stroke" cx="540" cy="50" r="8"/>
+          <text class="lbl lime" x="380" y="90" text-anchor="end">1.000</text>
+        </svg></div></div>
+        <div class="desc">Rejilla tenue, línea que se dibuja (A9) y puntos con valor. El tramo ámbar es proyectado.</div>
+        <div class="use">Bueno para: evoluciones y proyecciones (se pueden pedir barras o áreas)</div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ================= D · ADORNOS ================= -->
+  <section class="sec" id="D">
+    <div class="sec-h"><span class="code">D</span><span class="t">Adornos y efectos continuos</span></div>
+    <p>Detalles que decoran o que se mueven en bucle mientras la diapositiva está en pantalla.</p>
+    <div class="grid">
+
+      <article class="it">
+        <div class="it-h"><span class="code">D1</span><span class="name">Pista de circuito</span></div>
+        <div class="alias">PCB trace · circuit line</div>
+        <div class="stage"><div class="demo z1"><svg viewBox="0 0 420 140" width="420" height="140"><path class="trace" d="M0 30 H140 L200 90 H400"/><path class="trace" d="M0 120 H90 L130 80 H260"/></svg></div></div>
+        <div class="desc">Línea fina con quiebros a 45°, como una pista de placa. El motivo visual de Inmaker.</div>
+        <div class="use">Bueno para: portadas, diagramas de conexiones</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">D2</span><span class="name">Pulso de luz</span></div>
+        <div class="alias">signal pulse · energy flow</div>
+        <div class="stage"><div class="demo z1"><svg viewBox="0 0 420 140" width="420" height="140"><path class="trace" data-pulse d="M0 30 H140 L200 90 H400"/><path class="trace" data-pulse d="M0 120 H90 L130 80 H260"/></svg></div></div>
+        <div class="desc">Un destello que recorre la pista una y otra vez, como una señal viajando.</div>
+        <div class="use">Bueno para: portadas, diagramas de conexiones</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">D3</span><span class="name">Terminal</span></div>
+        <div class="alias">pad · node dot</div>
+        <div class="stage short"><div class="demo z1"><svg viewBox="0 0 260 60" width="260" height="60"><path class="trace" d="M10 30 H230"/><circle class="pad" cx="230" cy="30" r="8"/><circle class="pad" cx="10" cy="30" r="8"/></svg></div></div>
+        <div class="desc">Circulito hueco en lima que remata una pista.</div>
+        <div class="use">Al final de las pistas D1</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">D4</span><span class="name">Halo que respira</span></div>
+        <div class="alias">glow · breathing halo</div>
+        <div class="stage"><div class="demo"><div class="logo-wrap"><div class="halo"></div><img src="assets/logo-inmaker.png" alt=""></div></div></div>
+        <div class="desc">Resplandor lima detrás de una pieza que se expande y contrae despacio.</div>
+        <div class="use">Bueno para: el logo de portada</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">D5</span><span class="name">Onda</span></div>
+        <div class="alias">ping · ripple · radar</div>
+        <div class="stage short"><div class="demo z1"><svg class="chart" viewBox="0 0 120 120" width="120" height="120"><circle class="ring" cx="60" cy="60" r="30"/><circle class="dot amber" cx="60" cy="60" r="12"/></svg></div></div>
+        <div class="desc">Anillo que sale del punto y se desvanece, en bucle. Señala «aquí».</div>
+        <div class="use">Bueno para: señalar un punto en una gráfica</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">D6</span><span class="name">Resplandor de texto</span></div>
+        <div class="alias">text glow · neon</div>
+        <div class="stage short"><div class="demo reveal"><p class="big" style="font-family:var(--f-head); font-weight:700; font-size:110px; color:var(--lime); text-shadow:0 0 28px rgba(168,212,0,.4)">75 %</p></div></div>
+        <div class="desc">Brillo suave alrededor de cifras y números en color.</div>
+        <div class="use">En números de nodos, celdas y cifras</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">D7</span><span class="name">Línea de escaneo</span></div>
+        <div class="alias">scan bar</div>
+        <div class="stage short"><div class="demo"><div style="position:relative; width:500px; height:120px; background:#0b0f13"><i class="scanbar" style="left:60%; transform:none"></i></div></div></div>
+        <div class="desc">La barra luminosa vertical que acompaña al barrido A8. Solo existe durante la animación.</div>
+        <div class="use">Parte de A8</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">D8</span><span class="name">Cuadrícula de fondo</span></div>
+        <div class="alias">grid background · blueprint</div>
+        <div class="stage"><div style="width:100%; height:170px; background-image:linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px); background-size:32px 32px"></div></div>
+        <div class="desc">Rejilla muy tenue en todo el fondo, que se desvanece hacia los bordes. (Aquí, más marcada para que se vea.)</div>
+        <div class="use">Todas las diapositivas</div>
+      </article>
+
+      <article class="it">
+        <div class="it-h"><span class="code">D9</span><span class="name">Zona sombreada</span></div>
+        <div class="alias">area fill · highlight zone</div>
+        <div class="stage"><div class="demo z1"><svg class="chart" viewBox="0 0 360 160" width="360" height="160"><polygon class="profit" points="120,110 350,20 350,110"/><path class="trace cost" d="M10 110 H350"/><path class="trace rev" d="M10 150 L350 20"/></svg></div></div>
+        <div class="desc">Relleno translúcido entre dos líneas para marcar una zona (aquí, el beneficio).</div>
+        <div class="use">Bueno para: gráficas de beneficio o de rango</div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ================= K · COLORES ================= -->
+  <section class="sec" id="K">
+    <div class="sec-h"><span class="code">K</span><span class="t">Colores</span></div>
+    <p>La paleta de Inmaker. El orden lima → ámbar → plata → acero marca la numeración 01, 02, 03 y 04.</p>
+    <div class="grid small">
+      <article class="it"><div class="sw" style="background:#a8d400"></div><div class="it-h"><span class="code">K1</span><span class="name">Lima</span></div><div class="use">#A8D400 · color principal, 01</div></article>
+      <article class="it"><div class="sw" style="background:#ffc000"></div><div class="it-h"><span class="code">K2</span><span class="name">Ámbar</span></div><div class="use">#FFC000 · 02, destacados</div></article>
+      <article class="it"><div class="sw" style="background:#b9c2ca"></div><div class="it-h"><span class="code">K3</span><span class="name">Plata</span></div><div class="use">#B9C2CA · 03</div></article>
+      <article class="it"><div class="sw" style="background:#7d8790"></div><div class="it-h"><span class="code">K4</span><span class="name">Acero</span></div><div class="use">#7D8790 · 04</div></article>
+      <article class="it"><div class="sw" style="background:#05070a; border-bottom:1px solid var(--edge)"></div><div class="it-h"><span class="code">K5</span><span class="name">Fondo</span></div><div class="use">#05070A · casi negro</div></article>
+      <article class="it"><div class="sw" style="background:#eef2f4"></div><div class="it-h"><span class="code">K6</span><span class="name">Texto</span></div><div class="use">#EEF2F4 · blanco roto</div></article>
+      <article class="it"><div class="sw" style="background:#8b959e"></div><div class="it-h"><span class="code">K7</span><span class="name">Gris apagado</span></div><div class="use">#8B959E · textos secundarios</div></article>
+    </div>
+  </section>
+
+  <!-- ================= F · TIPOGRAFÍA ================= -->
+  <section class="sec" id="F">
+    <div class="sec-h"><span class="code">F</span><span class="t">Tipografía</span></div>
+    <p>Tres familias, cada una con un papel fijo.</p>
+    <div class="grid">
+      <article class="it"><div class="it-h"><span class="code">F1</span><span class="name">Chakra Petch</span></div><div class="stage short"><div class="typo" style="font-family:var(--f-head); font-weight:700; text-transform:uppercase">Titulares y cifras 75 %</div></div><div class="use">Títulos, números y cifras. Técnica y algo angulosa.</div></article>
+      <article class="it"><div class="it-h"><span class="code">F2</span><span class="name">Inter</span></div><div class="stage short"><div class="typo" style="font-family:var(--f-body); font-size:30px">Un párrafo de apoyo, fácil de leer</div></div><div class="use">Textos de apoyo y párrafos. Muy legible.</div></article>
+      <article class="it"><div class="it-h"><span class="code">F3</span><span class="name">JetBrains Mono</span></div><div class="stage short"><div class="typo" style="font-family:var(--f-mono); font-size:22px; letter-spacing:.3em; color:var(--lime); text-transform:uppercase">El antetítulo</div></div><div class="use">Antetítulos, etiquetas y pie. Letra de código.</div></article>
+    </div>
+  </section>
+
+  <!-- ================= T · TRANSICIONES ================= -->
+  <section class="sec" id="T">
+    <div class="sec-h"><span class="code">T</span><span class="t">Transiciones entre diapositivas</span></div>
+    <p>Cómo se pasa de una diapositiva a la siguiente. Las da Reveal.js. Se puede elegir una para toda la presentación o una distinta en cada diapositiva.</p>
+    <div class="grid small">
+      <article class="it"><div class="it-h"><span class="code">T1</span><span class="name">Fundido</span></div><div class="desc">Una se desvanece y aparece la otra. <b>La recomendada</b>, en versión rápida.</div><div class="use">fade</div></article>
+      <article class="it"><div class="it-h"><span class="code">T2</span><span class="name">Deslizar</span></div><div class="desc">La nueva empuja a la anterior hacia un lado.</div><div class="use">slide</div></article>
+      <article class="it"><div class="it-h"><span class="code">T3</span><span class="name">Convexo</span></div><div class="desc">Giro en 3D, como un cubo visto desde fuera.</div><div class="use">convex</div></article>
+      <article class="it"><div class="it-h"><span class="code">T4</span><span class="name">Cóncavo</span></div><div class="desc">Giro en 3D, como si estuvieras dentro del cubo.</div><div class="use">concave</div></article>
+      <article class="it"><div class="it-h"><span class="code">T5</span><span class="name">Zoom</span></div><div class="desc">La nueva llega desde el fondo, creciendo.</div><div class="use">zoom</div></article>
+      <article class="it"><div class="it-h"><span class="code">T6</span><span class="name">Corte seco</span></div><div class="desc">Cambio instantáneo, sin transición.</div><div class="use">none</div></article>
+      <article class="it"><div class="it-h"><span class="code">T7</span><span class="name">Transformación</span></div><div class="desc">Lo que se repite entre dos diapositivas se mueve y cambia de tamaño hasta su nuevo sitio, en lugar de desaparecer.</div><div class="use">auto-animate · morph</div></article>
+    </div>
+  </section>
+
+  <!-- ================= X · SIN USAR ================= -->
+  <section class="sec" id="X">
+    <div class="sec-h"><span class="code">X</span><span class="t">Vocabulario sin usar todavía</span></div>
+    <p>Efectos disponibles que todavía no se han usado en ninguna presentación, con su demostración. Se piden por su código igual que el resto.</p>
+    <div class="grid">
+
+      <article class="it x" data-fx="glitch">
+        <div class="it-h"><span class="code">X1</span><span class="name">Glitch</span><button>Repetir</button></div>
+        <div class="alias">glitch · interferencia</div>
+        <div class="stage"><div class="fx-glitch">Inmaker</div></div>
+        <div class="desc">El texto tiembla y se descompone en franjas de color un instante, como una señal con interferencias.</div>
+        <div class="use">Bueno para: un titular o una cifra que quieras que «impacte»</div>
+      </article>
+
+      <article class="it x" data-fx="typewriter">
+        <div class="it-h"><span class="code">X2</span><span class="name">Máquina de escribir</span><button>Repetir</button></div>
+        <div class="alias">typewriter · typing</div>
+        <div class="stage"><div class="fx-type">Una frase clave que aparece poco a poco</div></div>
+        <div class="desc">El texto aparece carácter a carácter con un cursor parpadeante.</div>
+        <div class="use">Bueno para: una frase clave, una cita</div>
+      </article>
+
+      <article class="it x" data-fx="scramble">
+        <div class="it-h"><span class="code">X3</span><span class="name">Descifrado</span><button>Repetir</button></div>
+        <div class="alias">text scramble · decode</div>
+        <div class="stage"><div class="fx-scramble">Texto que se descifra</div></div>
+        <div class="desc">Las letras pasan por caracteres aleatorios hasta fijarse en el texto correcto. Muy de «terminal».</div>
+        <div class="use">Bueno para: títulos, nombres de tecnologías</div>
+      </article>
+
+      <article class="it x" data-fx="focus">
+        <div class="it-h"><span class="code">X4</span><span class="name">Foco</span><button>Repetir</button></div>
+        <div class="alias">spotlight · focus dim</div>
+        <div class="stage"><div class="demo z4 reveal" style="display:grid; gap:20px">
+          <div class="item panel" style="--c:var(--lime)"><span class="num">01</span><h3>Primer punto</h3></div>
+          <div class="item panel" style="--c:var(--amber)"><span class="num">02</span><h3>Segundo punto</h3></div>
+          <div class="item panel" style="--c:var(--silver)"><span class="num">03</span><h3>Tercer punto</h3></div>
+        </div></div>
+        <div class="desc">Lo ya mostrado se oscurece y solo queda iluminado el punto del que hablas. En una presentación iría con cada pulsación.</div>
+        <div class="use">Bueno para: listas que explicas punto por punto</div>
+      </article>
+
+      <article class="it x" data-fx="parallax">
+        <div class="it-h"><span class="code">X5</span><span class="name">Parallax</span><button>Repetir</button></div>
+        <div class="alias">parallax · depth layers</div>
+        <div class="stage"><div class="fx-par">
+          <div class="lay grid-lay" data-depth="0.3"></div>
+          <svg class="lay" data-depth="0.7" viewBox="0 0 400 200" preserveAspectRatio="none"><path class="trace" d="M0 50 H150 L200 100 H400"/><path class="trace" d="M0 170 H120 L160 130 H300"/></svg>
+          <div class="lay" data-depth="1.4" style="display:grid; place-items:center"><div class="demo reveal"><div class="headchip panel tint" style="--c:var(--lime); width:460px">Primer plano</div></div></div>
+        </div></div>
+        <div class="desc">Fondo, pistas y contenido entran a distinta velocidad: lo cercano se mueve más que lo lejano y da profundidad.</div>
+        <div class="use">Bueno para: el cambio entre diapositivas o la portada</div>
+      </article>
+
+      <article class="it x" data-fx="particles">
+        <div class="it-h"><span class="code">X6</span><span class="name">Partículas</span><button>Repetir</button></div>
+        <div class="alias">particles · floating dust</div>
+        <div class="stage"><canvas class="fx-cv" width="400" height="180"></canvas></div>
+        <div class="desc">Puntos de luz que flotan despacio hacia arriba, en bucle, detrás del contenido.</div>
+        <div class="use">Bueno para: el fondo de la portada o del cierre</div>
+      </article>
+
+      <article class="it x" data-fx="grain">
+        <div class="it-h"><span class="code">X7</span><span class="name">Grano</span><button>Repetir</button></div>
+        <div class="alias">film grain · noise</div>
+        <div class="stage"><div class="fx-box"><div class="demo reveal"><h2 style="font-size:70px">Titular con grano</h2></div><div class="fx-grain"></div></div></div>
+        <div class="desc">Textura de ruido fino y vivo por encima de todo, como película. Quita la sensación de «pantalla plana».</div>
+        <div class="use">Bueno para: toda una presentación, muy sutil</div>
+      </article>
+
+      <article class="it x" data-fx="crt">
+        <div class="it-h"><span class="code">X8</span><span class="name">Líneas de monitor</span><button>Repetir</button></div>
+        <div class="alias">scanlines · CRT</div>
+        <div class="stage"><div class="fx-box"><div class="demo reveal"><h2 style="font-size:70px; color:var(--lime)">Titular retro</h2></div><div class="fx-crt"></div></div></div>
+        <div class="desc">Franjas horizontales finísimas y un leve parpadeo, como una pantalla antigua.</div>
+        <div class="use">Bueno para: un aire retro-tecnológico en toda una presentación</div>
+      </article>
+
+      <article class="it x" data-fx="iris">
+        <div class="it-h"><span class="code">X9</span><span class="name">Iris</span><button>Repetir</button></div>
+        <div class="alias">circle reveal · iris wipe</div>
+        <div class="stage"><div class="demo reveal"><div class="frame panel fx-iris" style="--c:var(--amber); width:480px; height:360px"><img src="assets/muestra.svg" alt=""></div></div></div>
+        <div class="desc">La pieza se descubre con una máscara circular que se abre desde el centro.</div>
+        <div class="use">Bueno para: fotos, alternativa al barrido A8</div>
+      </article>
+
+      <article class="it x" data-fx="odometer">
+        <div class="it-h"><span class="code">X10</span><span class="name">Cuentakilómetros</span><button>Repetir</button></div>
+        <div class="alias">odometer · rolling digits</div>
+        <div class="stage"><div class="fx-odo">12.345</div></div>
+        <div class="desc">Cada dígito gira en vertical como un contador mecánico, uno tras otro. Alternativa al contador A10.</div>
+        <div class="use">Bueno para: cifras grandes (unidades, euros)</div>
+      </article>
+
+      <article class="it x" data-fx="shimmer">
+        <div class="it-h"><span class="code">X11</span><span class="name">Destello que recorre</span><button>Repetir</button></div>
+        <div class="alias">shimmer · shine sweep</div>
+        <div class="stage"><div class="fx-shine-box"><img src="assets/logo-inmaker.png" alt="" style="width:240px; display:block"><i class="fx-shine"></i></div></div>
+        <div class="desc">Un reflejo diagonal pasa por encima de la pieza, como luz sobre metal.</div>
+        <div class="use">Bueno para: el logo, una tarjeta que quieras destacar</div>
+      </article>
+
+      <article class="it x" data-fx="border">
+        <div class="it-h"><span class="code">X12</span><span class="name">Borde que se dibuja</span><button>Repetir</button></div>
+        <div class="alias">border draw · outline trace</div>
+        <div class="stage"><div class="fx-bwrap">
+          <svg class="fx-border" viewBox="0 0 340 120" width="340" height="120"><path d="M12 1 H339 V108 L328 119 H1 V12 Z"/></svg>
+          <div class="fx-border-in"><span>02</span> Tarjeta</div>
+        </div></div>
+        <div class="desc">El contorno del panel se traza a su alrededor y después aparece el contenido.</div>
+        <div class="use">Bueno para: tarjetas y nodos, alternativa a A8</div>
+      </article>
+
+      <article class="it x" data-fx="bounce">
+        <div class="it-h"><span class="code">X13</span><span class="name">Rebote</span><button>Repetir</button></div>
+        <div class="alias">bounce · drop in</div>
+        <div class="stage"><div class="demo reveal"><div class="item panel" style="--c:var(--amber)"><span class="num">02</span><h3>Pieza que rebota</h3></div></div></div>
+        <div class="desc">La pieza cae desde arriba y rebota antes de asentarse. Más juguetón que el resto.</div>
+        <div class="use">Bueno para: momentos distendidos (eventos, premios)</div>
+      </article>
+
+      <article class="it x" data-fx="flip">
+        <div class="it-h"><span class="code">X14</span><span class="name">Voltear</span><button>Repetir</button></div>
+        <div class="alias">card flip</div>
+        <div class="stage"><div class="demo reveal" style="perspective:1200px"><div class="fx-card"><div class="cell panel face" style="--c:var(--lime); width:340px; height:190px"><p class="big">75 %</p><p class="small">la cifra sorpresa</p></div><div class="face back"></div></div></div></div>
+        <div class="desc">La tarjeta gira en 3D como una carta y enseña su cara.</div>
+        <div class="use">Bueno para: revelar una cifra «sorpresa»</div>
+      </article>
+
+      <article class="it x" data-fx="zoom">
+        <div class="it-h"><span class="code">X15</span><span class="name">Zoom a detalle</span><button>Repetir</button></div>
+        <div class="alias">zoom to detail · ken burns</div>
+        <div class="stage"><div class="fx-zoom"><img src="assets/muestra.svg" alt=""><i class="fx-ring"></i></div></div>
+        <div class="desc">La imagen se acerca a una zona concreta para señalarla y luego vuelve.</div>
+        <div class="use">Bueno para: fotos de producto, capturas, gráficas</div>
+      </article>
+
+    </div>
+  </section>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="js/anim.js"></script>
+<script src="js/fx.js"></script>
+<script>
+  const { prepare, show, hide } = window.InmakerAnim;
+  prepare();
+
+  function play(card) {
+    if (card.dataset.fx) { window.InmakerFX[card.dataset.fx](card); return; }
+    const targets = [...card.querySelectorAll('.t')];
+    if (targets.length) {
+      const gap = +(card.querySelector('[data-stagger]')?.dataset.stagger || 0);
+      targets.forEach(t => hide(t));
+      const tl = gsap.timeline({ delay: .15 });
+      targets.forEach((t, i) => tl.add(show(t), i * gap));
+    }
+    card.querySelectorAll('[data-ease] i').forEach(b => {
+      gsap.fromTo(b, { left: '0%' }, { left: 'calc(100% - 20px)', duration: 1.4, ease: b.dataset.e, delay: .15 });
+    });
+  }
+
+  const cards = document.querySelectorAll('.it');
+  cards.forEach(c => {
+    c.querySelectorAll('.t').forEach(t => hide(t));
+    c.querySelector('button')?.addEventListener('click', () => play(c));
+  });
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { play(e.target); io.unobserve(e.target); }
+  }), { threshold: .4 });
+  cards.forEach(c => io.observe(c));
+</script>
+</body>
+</html>
