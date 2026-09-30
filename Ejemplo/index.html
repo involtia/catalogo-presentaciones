@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reveal.js · Inmaker</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+  <link rel="stylesheet" href="../css/theme.css">
+  <style>
+    /* estilos propios de esta demo */
+    .reveal .slides > section > section { width: 1920px; height: 1080px; padding: 0; }
+    .reveal .controls { color: var(--lime); }
+    .reveal .slide-number { font-family: var(--f-mono); font-size: 16px; background: transparent; color: var(--muted); right: 120px; bottom: 36px; }
+    .hint { position: absolute; font-family: var(--f-mono); font-size: 22px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+    .hint b { color: var(--lime); font-weight: 500; }
+
+    /* 1 · portada con atajos */
+    .s-intro .traces { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .intro { position: absolute; left: 120px; top: 150px; width: 880px; }
+    .intro .logo-wrap { width: 250px; }
+    .intro .kicker { margin-top: 56px; }
+    .intro h1 { margin-top: 24px; font-size: 100px; line-height: 1.02; perspective: 900px; }
+    .intro h1 .hl { color: var(--lime); text-shadow: 0 0 28px rgba(168, 212, 0, .35); }
+    .intro .sub { margin-top: 36px; font-size: 32px; line-height: 1.35; color: #c7cdd2; max-width: 800px; }
+    .keys { left: 1090px; top: 110px; width: 710px; padding: 34px 42px 26px; }
+    .keys .label { margin-bottom: 14px; }
+    .krow { display: grid; grid-template-columns: 230px 1fr; align-items: center; gap: 20px; padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, .06); font-size: 25px; color: #c7cdd2; }
+    .krow:last-child { border-bottom: 0; }
+    .krow .ks { display: flex; gap: 8px; align-items: center; font-family: var(--f-mono); font-size: 18px; color: var(--muted); }
+    .key { display: inline-grid; place-items: center; min-width: 50px; height: 46px; padding: 0 12px;
+           font-family: var(--f-mono); font-size: 20px; color: var(--ink); background: #0e1318;
+           border: 1.5px solid rgba(168, 212, 0, .55); border-bottom-width: 4px; border-radius: 6px; }
+
+    /* 2 · flujo de diseño con fragmentos */
+    .flow { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .step { position: absolute; top: 360px; width: 340px; height: 360px; padding: 34px 32px;
+            display: flex; flex-direction: column; gap: 16px; }
+    .step .num { font-size: 56px; line-height: 1; text-shadow: 0 0 22px color-mix(in srgb, var(--c) 45%, transparent); }
+    .step svg { width: 150px; height: 70px; overflow: visible; }
+    .step svg * { fill: none; stroke: var(--c); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; }
+    .step h3 { font-size: 36px; }
+    .step p { font-size: 23px; line-height: 1.35; color: var(--muted); }
+
+    /* 3 · código */
+    .code { left: 120px; top: 250px; width: 1060px; padding: 14px; }
+    .reveal .code pre { width: 100%; margin: 0; box-shadow: none; font-size: 26px; }
+    .reveal .code pre code { max-height: none; padding: 28px 30px; font-family: var(--f-mono); line-height: 1.5; background: #0b0f13; font-variant-ligatures: none; }
+    .reveal .code .hljs-ln-numbers { color: #4b545c; padding-right: 22px; }
+    .board { position: absolute; left: 1260px; top: 250px; width: 540px; height: 620px; }
+    .board .wire { fill: none; stroke: var(--silver); stroke-opacity: .6; stroke-width: 3; }
+    .board .chip { fill: #111820; stroke: var(--silver); stroke-width: 2; }
+    .board .pin { fill: var(--silver); fill-opacity: .7; }
+    .board text { font-family: var(--f-mono); font-size: 20px; fill: var(--muted); letter-spacing: .08em; }
+    .board .led { fill: var(--lime); animation: breathe-led 2.2s ease-in-out infinite; filter: drop-shadow(0 0 16px var(--lime)); }
+    @keyframes breathe-led { 0%, 100% { fill-opacity: .12; filter: drop-shadow(0 0 0 transparent); } 50% { fill-opacity: 1; filter: drop-shadow(0 0 22px var(--lime)); } }
+    .code-cap { left: 1260px; top: 900px; width: 540px; font-size: 22px; color: var(--muted); line-height: 1.4; }
+
+    /* 4 · capas (verticales + auto-animate) */
+    .layer-b { position: absolute; left: 330px; width: 900px; }
+    .layer-b.silk  { background: #d9dee2; }
+    .layer-b.cu    { background: linear-gradient(90deg, #a8d400, #c9ea4a 50%, #a8d400); box-shadow: 0 0 18px rgba(168, 212, 0, .35); }
+    .layer-b.core  { background: repeating-linear-gradient(135deg, #3b3a22 0 10px, #2f2e1a 10px 20px); }
+    .layer-b.inner { background: #7d9a12; }
+    .part { position: absolute; background: #151b20; border: 2px solid var(--silver); }
+    .ltag { position: absolute; left: 1290px; font-family: var(--f-mono); font-size: 24px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink); }
+    .ltag::before { content: '◂ '; color: var(--lime); }
+    .ltag small { display: block; margin-top: 4px; font-size: 18px; color: var(--muted); letter-spacing: .06em; text-transform: none; }
+    .stat { position: absolute; left: 1290px; top: 820px; }
+    .stat b { font-family: var(--f-head); font-size: 110px; color: var(--amber); text-shadow: 0 0 30px rgba(255, 192, 0, .35); }
+    .stat span { display: block; font-family: var(--f-mono); font-size: 22px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+
+    /* 5 · calculadora */
+    .step, .keys, .calc { box-sizing: border-box; }
+    .calc { left: 120px; top: 270px; width: 900px; height: 580px; padding: 40px 48px; display: flex; flex-direction: column; gap: 26px; }
+    .calc .katex { font-size: 58px; color: var(--ink); }
+    .calc .katex-display { margin: 6px 0 12px; text-align: left; }
+    .ctl { display: grid; grid-template-columns: 90px 1fr 190px; align-items: center; gap: 26px; }
+    .ctl label { font-family: var(--f-head); font-weight: 700; font-size: 34px; color: var(--c); }
+    .ctl output { font-family: var(--f-mono); font-size: 28px; text-align: right; color: var(--ink); }
+    .ctl input { width: 100%; accent-color: var(--c); height: 28px; cursor: pointer; }
+    .vout { position: absolute; left: 1120px; top: 270px; width: 680px; height: 640px; }
+    .vout svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .vout text { font-family: var(--f-mono); font-size: 24px; fill: var(--muted); }
+    .vout .val { font-family: var(--f-head); font-weight: 700; font-size: 30px; fill: var(--ink); }
+    .vout .big { font-family: var(--f-head); font-weight: 700; font-size: 80px; fill: var(--amber); filter: drop-shadow(0 0 18px rgba(255, 192, 0, .35)); }
+    .gnd { fill: none; stroke: var(--silver); stroke-width: 3; }
+    .outro { position: absolute; left: 120px; top: 920px; font-size: 26px; color: #c7cdd2; }
+    .outro b { color: var(--lime); font-weight: 600; }
+  </style>
+</head>
+<body>
+<div class="reveal">
+  <div class="slides">
+
+    <!-- ============ 1 · PORTADA Y CÓMO MOVERSE ============ -->
+    <section class="s-intro">
+      <svg class="traces" viewBox="0 0 1920 1080" data-in="draw" data-at="0" aria-hidden="true">
+        <path class="trace" data-pulse d="M0 1000 H260 L330 930 H700"/>
+        <path class="trace" d="M0 60 H60 L110 110 V330"/>
+        <path class="trace" data-pulse d="M1920 1010 H1640 L1580 950 H1180"/>
+        <circle class="pad" cx="700" cy="930" r="7"/>
+        <circle class="pad" cx="110" cy="330" r="6"/>
+        <circle class="pad" cx="1180" cy="950" r="7"/>
+      </svg>
+
+      <div class="intro">
+        <div class="logo-wrap" data-in="scale" data-at="0.4">
+          <div class="halo"></div>
+          <img src="../assets/logo-inmaker.png" alt="Inmaker">
+        </div>
+        <div class="kicker" data-in="up">Reveal.js · Inmaker</div>
+        <h1 data-in="chars">Del esquema<br>a la <span class="hl">pantalla</span></h1>
+        <p class="sub" data-in="up">Cinco diapositivas para ver lo que puede hacer una presentación web con Reveal.js.</p>
+      </div>
+
+      <div class="keys panel" data-in="scan" style="--c:var(--lime); position:absolute">
+        <div class="label">Cómo moverte</div>
+        <div class="krow"><div class="ks"><span class="key">→</span><span class="key">Espacio</span></div>Siguiente paso</div>
+        <div class="krow"><div class="ks"><span class="key">←</span></div>Paso anterior</div>
+        <div class="krow"><div class="ks"><span class="key">↓</span><span class="key">↑</span></div>Bajar y subir en la diapositiva 4</div>
+        <div class="krow"><div class="ks"><span class="key">Esc</span>o<span class="key">O</span></div>Ver todas las diapositivas</div>
+        <div class="krow"><div class="ks"><span class="key">G</span></div>Saltar: número + Intro</div>
+        <div class="krow"><div class="ks"><span class="key">F</span></div>Pantalla completa</div>
+        <div class="krow"><div class="ks"><span class="key">S</span></div>Notas del ponente</div>
+        <div class="krow"><div class="ks"><span class="key">B</span></div>Pantalla en negro</div>
+        <div class="krow"><div class="ks"><span class="key">Alt</span>+ clic</div>Ampliar una zona</div>
+        <div class="krow"><div class="ks"><span class="key">?</span></div>Todos los atajos</div>
+      </div>
+
+      <footer class="ft"><span>Inmaker · Reveal.js</span></footer>
+
+      <aside class="notes">
+        Estas son las notas del ponente: solo las ve quien presenta, al pulsar S.
+        La ventana de notas muestra también la diapositiva siguiente y un reloj.
+        Recorre los atajos del panel de la derecha y prueba Esc para ver el mapa de toda la presentación.
+      </aside>
+    </section>
+
+    <!-- ============ 2 · FRAGMENTOS: EL FLUJO DE DISEÑO ============ -->
+    <section class="s-flow" data-transition="slide">
+      <header class="hd">
+        <div class="kicker" data-in="left">01 · Fragmentos</div>
+        <h2 data-in="left">El flujo de diseño electrónico</h2>
+      </header>
+      <img class="corner-logo" src="../assets/logo-inmaker.png" alt="" data-in="fade">
+
+      <svg class="flow" viewBox="0 0 1920 1080" aria-hidden="true">
+        <g class="fragment g" data-a="draw" data-fragment-index="1">
+          <path class="trace lime" data-pulse d="M470 540 H570"/><circle class="pad" cx="470" cy="540" r="7"/><circle class="pad" cx="570" cy="540" r="7"/>
+        </g>
+        <g class="fragment g" data-a="draw" data-fragment-index="2">
+          <path class="trace amber" data-pulse d="M910 540 H1010"/><circle class="pad" cx="910" cy="540" r="7"/><circle class="pad" cx="1010" cy="540" r="7"/>
+        </g>
+        <g class="fragment g" data-a="draw" data-fragment-index="3">
+          <path class="trace silver" data-pulse d="M1350 540 H1450"/><circle class="pad" cx="1350" cy="540" r="7"/><circle class="pad" cx="1450" cy="540" r="7"/>
+        </g>
+      </svg>
+
+      <div class="step panel fragment g" data-a="scan" data-fragment-index="0" style="--c:var(--lime); left:130px">
+        <span class="num">01</span>
+        <svg viewBox="0 0 150 70"><path d="M0 35 H28 L36 17 L50 53 L64 17 L78 53 L92 17 L100 35 H118"/><path d="M118 20 V50 M130 20 V50"/><path d="M130 35 H150"/></svg>
+        <h3>Esquemático</h3>
+        <p>Qué componentes lleva el circuito y cómo se conectan.</p>
+      </div>
+      <div class="step panel fragment g" data-a="scan" data-fragment-index="1" style="--c:var(--lime); left:570px">
+        <span class="num">02</span>
+        <svg viewBox="0 0 150 70"><path d="M0 12 H50 L72 34 H150"/><path d="M0 58 H80 L100 38"/><circle cx="150" cy="34" r="6"/><circle cx="104" cy="34" r="4"/></svg>
+        <h3>Layout</h3>
+        <p>Dónde va cada pieza en la placa y por dónde pasan las pistas.</p>
+      </div>
+      <div class="step panel fragment g" data-a="scan" data-fragment-index="2" style="--c:var(--amber); left:1010px">
+        <span class="num">03</span>
+        <svg viewBox="0 0 150 70"><path d="M10 14 H140"/><path d="M10 30 H140 V44 H10 Z"/><path d="M10 58 H140"/></svg>
+        <h3>Fabricación</h3>
+        <p>Los ficheros Gerber van a fábrica y vuelven placas desnudas.</p>
+      </div>
+      <div class="step panel fragment g" data-a="scan" data-fragment-index="3" style="--c:var(--silver); left:1450px">
+        <span class="num">04</span>
+        <svg viewBox="0 0 150 70"><path d="M45 12 H105 V58 H45 Z"/><path d="M30 22 H45 M30 35 H45 M30 48 H45 M105 22 H120 M105 35 H120 M105 48 H120"/></svg>
+        <h3>Montaje</h3>
+        <p>Se sueldan los componentes y la placa cobra vida.</p>
+      </div>
+
+      <p class="hint" data-in="fade" style="left:130px; top:850px">Cada <b>→</b> revela un paso · <b>←</b> lo vuelve a ocultar</p>
+      <footer class="ft"><span>Inmaker · Reveal.js</span></footer>
+
+      <aside class="notes">
+        Los fragmentos permiten construir la diapositiva mientras hablas.
+        Clic 1: esquemático. Clic 2: layout, y la pista que lo une. Clic 3: fabricación. Clic 4: montaje.
+        Si vas hacia atrás, los pasos desaparecen en orden inverso.
+      </aside>
+    </section>
+
+    <!-- ============ 3 · CÓDIGO CON RESALTADO POR PASOS ============ -->
+    <section class="s-code" data-transition="convex">
+      <header class="hd">
+        <div class="kicker" data-in="left">02 · Código</div>
+        <h2 data-in="left">El firmware, línea a línea</h2>
+      </header>
+      <img class="corner-logo" src="../assets/logo-inmaker.png" alt="" data-in="fade">
+
+      <div class="code panel" data-in="scan" style="--c:var(--lime); position:absolute">
+        <pre><code class="language-cpp" data-trim data-noescape data-line-numbers="1-4|6-9|11-16">
+#include &lt;Arduino.h&gt;
+
+const int LED   = 2;    // GPIO2 del ESP32
+const int CANAL = 0;    // canal PWM
+
+void setup() {
+  ledcSetup(CANAL, 5000, 8);   // 5 kHz, 8 bits
+  ledcAttachPin(LED, CANAL);
+}
+
+void loop() {
+  for (int d = 0; d &lt;= 255; d++) {
+    ledcWrite(CANAL, d);       // sube el brillo
+    delay(4);
+  }
+}
+        </code></pre>
+      </div>
+
+      <svg class="board" viewBox="0 0 540 620" data-in="fade" aria-hidden="true">
+        <rect class="chip" x="40" y="60" width="200" height="260" rx="8"/>
+        <g class="pin">
+          <rect x="240" y="100" width="18" height="10"/><rect x="240" y="140" width="18" height="10"/><rect x="240" y="180" width="18" height="10"/>
+          <rect x="240" y="220" width="18" height="10"/><rect x="240" y="260" width="18" height="10"/>
+          <rect x="22" y="100" width="18" height="10"/><rect x="22" y="140" width="18" height="10"/><rect x="22" y="180" width="18" height="10"/>
+          <rect x="22" y="220" width="18" height="10"/><rect x="22" y="260" width="18" height="10"/>
+        </g>
+        <text x="140" y="196" text-anchor="middle" style="fill:var(--ink)">ESP32</text>
+        <text x="272" y="136">GPIO2</text>
+        <path class="wire" d="M258 145 H400 V200"/>
+        <path class="wire" d="M400 200 L420 212 L380 236 L420 260 L380 284 L400 296 V330"/>
+        <text x="436" y="256">220 Ω</text>
+        <path class="led" d="M370 340 H430 L400 390 Z"/>
+        <path class="wire" d="M370 392 H430 M400 330 V340 M400 392 V470"/>
+        <path class="wire" d="M370 470 H430 M380 484 H420 M390 498 H410"/>
+        <text x="436" y="374" style="fill:var(--lime)">LED</text>
+      </svg>
+
+      <p class="code-cap" data-in="up" style="position:absolute">Reveal resalta un bloque de código en cada pulsación. El LED de la derecha hace lo que dice el <code>loop()</code>.</p>
+      <footer class="ft"><span>Inmaker · Reveal.js</span></footer>
+
+      <aside class="notes">
+        El plugin de resaltado colorea el código y lo recorre por bloques.
+        Clic 1: las constantes, qué pin y qué canal PWM. Clic 2: la configuración. Clic 3: el bucle que sube el brillo.
+        El código es texto real: se puede seleccionar y copiar.
+      </aside>
+    </section>
+
+    <!-- ============ 4 · DIAPOSITIVAS VERTICALES + AUTO-ANIMATE ============ -->
+    <section data-transition="zoom">
+      <section data-auto-animate>
+        <header class="hd" data-id="hd4">
+          <div class="kicker">03 · Diapositivas verticales</div>
+          <h2>Dentro de una placa</h2>
+        </header>
+        <img class="corner-logo" src="../assets/logo-inmaker.png" alt="" data-id="logo4">
+
+        <div class="part" data-id="u1" style="left:470px; top:448px; width:180px; height:40px"></div>
+        <div class="part" data-id="u2" style="left:860px; top:462px; width:90px; height:26px"></div>
+        <div class="layer-b silk" data-id="silk" style="top:488px; height:10px"></div>
+        <div class="layer-b cu"   data-id="top"  style="top:498px; height:16px"></div>
+        <div class="layer-b core" data-id="core" style="top:514px; height:90px"></div>
+        <div class="layer-b cu"   data-id="bot"  style="top:604px; height:16px"></div>
+
+        <p class="hint" data-id="hint4" style="left:330px; top:760px">Pulsa <b>↓</b> para separar las capas</p>
+        <footer class="ft" data-id="ft4"><span>Inmaker · Reveal.js</span></footer>
+        <aside class="notes">
+          Esta diapositiva tiene otras debajo: se baja con la flecha abajo. En la vista general (Esc) se ven en columna.
+          Entre ellas, Auto-Animate mueve solo las piezas que coinciden, sin programar ninguna animación.
+        </aside>
+      </section>
+
+      <section data-auto-animate>
+        <header class="hd" data-id="hd4">
+          <div class="kicker">03 · Diapositivas verticales</div>
+          <h2>Dentro de una placa</h2>
+        </header>
+        <img class="corner-logo" src="../assets/logo-inmaker.png" alt="" data-id="logo4">
+
+        <div class="part" data-id="u1" style="left:470px; top:250px; width:180px; height:40px"></div>
+        <div class="part" data-id="u2" style="left:860px; top:264px; width:90px; height:26px"></div>
+        <div class="layer-b silk" data-id="silk" style="top:360px; height:10px"></div>
+        <div class="layer-b cu"   data-id="top"  style="top:450px; height:16px"></div>
+        <div class="layer-b core" data-id="core" style="top:545px; height:90px"></div>
+        <div class="layer-b cu"   data-id="bot"  style="top:715px; height:16px"></div>
+
+        <div class="ltag" style="top:255px">Componentes<small>se sueldan encima</small></div>
+        <div class="ltag" style="top:345px">Serigrafía<small>nombres y marcas</small></div>
+        <div class="ltag" style="top:440px">Cobre superior<small>pistas de la cara de arriba</small></div>
+        <div class="ltag" style="top:568px">Núcleo FR4<small>fibra de vidrio y resina</small></div>
+        <div class="ltag" style="top:705px">Cobre inferior<small>pistas de la cara de abajo</small></div>
+
+        <p class="hint" data-id="hint4" style="left:330px; top:830px">Pulsa <b>↓</b> otra vez para ver las capas internas</p>
+        <footer class="ft" data-id="ft4"><span>Inmaker · Reveal.js</span></footer>
+        <aside class="notes">
+          Las mismas piezas, separadas. Las etiquetas son nuevas, por eso aparecen con un fundido.
+        </aside>
+      </section>
+
+      <section data-auto-animate>
+        <header class="hd" data-id="hd4">
+          <div class="kicker">03 · Diapositivas verticales</div>
+          <h2>Una placa de 4 capas</h2>
+        </header>
+        <img class="corner-logo" src="../assets/logo-inmaker.png" alt="" data-id="logo4">
+
+        <div class="part" data-id="u1" style="left:470px; top:250px; width:180px; height:40px"></div>
+        <div class="part" data-id="u2" style="left:860px; top:264px; width:90px; height:26px"></div>
+        <div class="layer-b silk" data-id="silk" style="top:330px; height:10px"></div>
+        <div class="layer-b cu"   data-id="top"  style="top:380px; height:16px"></div>
+        <div class="layer-b core" data-id="core" style="top:436px; height:330px"></div>
+        <div class="layer-b inner" data-id="l2" style="top:530px; height:14px"></div>
+        <div class="layer-b inner" data-id="l3" style="top:660px; height:14px"></div>
+        <div class="layer-b cu"   data-id="bot"  style="top:806px; height:16px"></div>
+
+        <div class="ltag" style="top:512px">Capa interna 2<small>plano de masa</small></div>
+        <div class="ltag" style="top:642px">Capa interna 3<small>alimentación</small></div>
+        <div class="stat"><b>1,6 mm</b><span>grosor total habitual</span></div>
+
+        <p class="hint" data-id="hint4" style="left:330px; top:880px">Pulsa <b>→</b> para seguir</p>
+        <footer class="ft" data-id="ft4"><span>Inmaker · Reveal.js</span></footer>
+        <aside class="notes">
+          El núcleo crece y aparecen dos capas internas: masa y alimentación. Es la estructura típica de una placa de 4 capas.
+        </aside>
+      </section>
+    </section>
+
+    <!-- ============ 5 · INTERACTIVIDAD: DIVISOR DE TENSIÓN ============ -->
+    <section class="s-calc" data-transition="fade">
+      <header class="hd">
+        <div class="kicker" data-in="left">04 · Interactividad</div>
+        <h2 data-in="left">Calcula un divisor de tensión</h2>
+      </header>
+      <img class="corner-logo" src="../assets/logo-inmaker.png" alt="" data-in="fade">
+
+      <div class="calc panel" data-in="scan" style="--c:var(--lime); position:absolute">
+        <div class="label">Mueve los controles</div>
+        <div>\[ V_{out} = V_{in} \cdot \frac{R_2}{R_1 + R_2} \]</div>
+        <div class="ctl" style="--c:var(--amber)"><label for="vin">V<sub>in</sub></label><input id="vin" type="range" min="1" max="24" step="0.1" value="12"><output id="o-vin"></output></div>
+        <div class="ctl" style="--c:var(--lime)"><label for="r1">R<sub>1</sub></label><input id="r1" type="range" min="1" max="100" step="1" value="10"><output id="o-r1"></output></div>
+        <div class="ctl" style="--c:var(--lime)"><label for="r2">R<sub>2</sub></label><input id="r2" type="range" min="1" max="100" step="1" value="5"><output id="o-r2"></output></div>
+      </div>
+
+      <div class="vout" data-in="fade">
+        <svg viewBox="0 0 680 640" aria-hidden="true">
+          <path class="trace lime" data-pulse d="M200 40 V110"/>
+          <path class="trace lime" d="M200 110 L230 124 L170 152 L230 180 L170 208 L230 236 L200 250 V320"/>
+          <path class="trace lime" data-pulse d="M200 320 H430"/>
+          <path class="trace lime" d="M200 320 V390 L230 404 L170 432 L230 460 L170 488 L230 516 L200 530 V570"/>
+          <path class="gnd" d="M160 570 H240 M172 586 H228 M186 602 H214"/>
+          <circle class="pad" cx="200" cy="40" r="8"/><circle class="pad" cx="200" cy="320" r="8"/><circle class="pad" cx="430" cy="320" r="8"/>
+          <text x="226" y="46">V<tspan dy="6" font-size="18">in</tspan></text>
+          <text x="250" y="186">R1 = <tspan class="val" id="t-r1"></tspan></text>
+          <text x="250" y="466">R2 = <tspan class="val" id="t-r2"></tspan></text>
+          <text x="456" y="300">V<tspan dy="6" font-size="18">out</tspan></text>
+          <text class="big" x="676" y="420" text-anchor="end" id="t-vout"></text>
+          <text x="676" y="470" text-anchor="end" id="t-i"></text>
+        </svg>
+      </div>
+
+      <p class="outro fragment g" data-a="up">Todo esto es una página web: si funciona en un navegador, cabe en una diapositiva. <b>Esc</b> para ver el mapa completo.</p>
+      <footer class="ft"><span>Inmaker · Reveal.js</span></footer>
+
+      <aside class="notes">
+        Una diapositiva de Reveal es HTML: puede llevar controles, cálculos o datos en directo.
+        La fórmula la dibuja el plugin de matemáticas (KaTeX).
+        Mueve Vin, R1 y R2 y la tensión de salida se recalcula al momento.
+        Clic final: el mensaje de cierre.
+      </aside>
+    </section>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/math/math.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/zoom/zoom.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="../js/anim.js"></script>
+<script>
+  Reveal.initialize({
+    width: 1920, height: 1080, margin: 0, minScale: 0.1, maxScale: 3,
+    center: false, hash: true, controls: true, controlsTutorial: true, progress: true, slideNumber: 'h.v',
+    transition: 'fade', transitionSpeed: 'default', backgroundTransition: 'none',
+    autoAnimateDuration: 1.1,
+    plugins: [RevealNotes, RevealHighlight, RevealMath.KaTeX, RevealZoom]
+  });
+
+  // vista general (Esc): se enseña todo; al salir, se vuelve a ocultar lo que no toca
+  const { show, hide } = window.InmakerAnim;
+  Reveal.on('overviewshown', () => {
+    document.querySelectorAll('.reveal [data-in], .reveal .fragment.g').forEach(e => show(e, true));
+  });
+  Reveal.on('overviewhidden', () => {
+    const cur = Reveal.getCurrentSlide();
+    document.querySelectorAll('.reveal [data-in]').forEach(e => { if (!cur.contains(e)) hide(e); });
+    document.querySelectorAll('.reveal .fragment.g:not(.visible)').forEach(e => hide(e));
+  });
+
+  // calculadora del divisor de tensión
+  (() => {
+    const $ = id => document.getElementById(id);
+    const num = (v, d) => v.toFixed(d).replace('.', ',');
+    function update() {
+      const vin = +$('vin').value, r1 = +$('r1').value, r2 = +$('r2').value;
+      const vout = vin * r2 / (r1 + r2), ma = vin / (r1 + r2);
+      $('o-vin').textContent = num(vin, 1) + ' V';
+      $('o-r1').textContent = $('t-r1').textContent = r1 + ' kΩ';
+      $('o-r2').textContent = $('t-r2').textContent = r2 + ' kΩ';
+      $('t-vout').textContent = num(vout, 2) + ' V';
+      $('t-i').textContent = 'I = ' + num(ma, 2) + ' mA';
+    }
+    ['vin', 'r1', 'r2'].forEach(id => {
+      const el = $(id);
+      el.addEventListener('input', update);
+      // al soltar, las flechas vuelven a mover diapositivas
+      el.addEventListener('pointerup', () => el.blur());
+    });
+    update();
+  })();
+</script>
+</body>
+</html>

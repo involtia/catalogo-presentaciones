@@ -12,7 +12,7 @@ Abre `catalogo.html` con un servidor local, por ejemplo:
 python -m http.server 8000
 ```
 
-y entra en <http://localhost:8000/catalogo.html>.
+y entra en <http://localhost:8000/catalogo.html>. La presentación de ejemplo está en <http://localhost:8000/Ejemplo/>.
 
 ## Qué hay
 
@@ -23,6 +23,7 @@ y entra en <http://localhost:8000/catalogo.html>.
 | `js/anim.js` | Animaciones de entrada sobre GSAP |
 | `js/fx.js` | Efectos de la sección X, todavía sin usar en ninguna presentación |
 | `assets/` | Logo de Inmaker e imagen de muestra |
+| `Ejemplo/` | Presentación de 5 diapositivas hecha con estas piezas que enseña lo que puede hacer Reveal.js: fragmentos, código resaltado por pasos, diapositivas verticales con Auto-Animate, fórmulas y una calculadora interactiva |
 
 Depende de [GSAP](https://gsap.com) (se carga desde jsDelivr) y de las fuentes Chakra Petch, Inter y JetBrains Mono de Google Fonts.
 
